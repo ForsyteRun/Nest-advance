@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 type Tack = {
   id: number;
@@ -54,6 +55,37 @@ export class TaskService {
 
     return {
       message: 'Task created successfully'
+    }
+  }
+
+  updateTask(id: number, dto: UpdateTaskDto) {
+    const task = this.findById(id)
+
+    task.name = dto.name
+    task.isCompleted = dto.isCompleted
+
+    return {
+      message: 'Task updated successfully'
+    }
+  }
+
+  patchTask(id: number, dto: Partial<UpdateTaskDto>) {
+    let task = this.findById(id)
+
+    Object.assign(task, dto)
+
+    return {
+      message: 'Task updated successfully'
+    }
+  }
+
+  deleteTask(id: number) {
+    const task = this.findById(id)
+
+    this.tasks = this.tasks.filter(t => t.id !== task.id)
+
+    return {
+      message: 'Task deleted successfully'
     }
   }
 }
