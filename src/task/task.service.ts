@@ -1,26 +1,36 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+
+type Tack = {
+  id: number;
+  name: string;
+  isCompleted: boolean;
+}
 
 @Injectable()
 export class TaskService {
-  create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
-  }
-
+  private tasks: Tack[] = [
+    {
+      id: 1,
+      name: 'task 1',
+      isCompleted: false,
+    },
+    {
+      id: 2,
+      name: 'task 2',
+      isCompleted: false,
+    },
+  ];
   findAll() {
-    return `This action returns all task`;
+    return this.tasks
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
-  }
+  findById(id: number) {
+    const task = this.tasks.find(task => task.id === id)
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
-  }
+    if (!task) {
+      throw new NotFoundException('Task not found')
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+    return task
   }
 }
