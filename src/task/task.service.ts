@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 type Tack = {
   id: number;
@@ -32,5 +33,27 @@ export class TaskService {
     }
 
     return task
+  }
+
+  createTask(dto: CreateTaskDto) {
+    const isTaskExist = this.tasks.find(task => task.name === dto.name)
+
+    if (isTaskExist) {
+      return {
+        message: 'Task already exist'
+      }
+    }
+
+    const newTask = {
+      id: this.tasks.length + 1,
+      isCompleted: false,
+      name: dto.name
+    }
+
+    this.tasks.push(newTask)
+
+    return {
+      message: 'Task created successfully'
+    }
   }
 }
