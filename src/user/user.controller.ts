@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller({
@@ -7,8 +7,8 @@ import { UserService } from './user.service';
 })
 export class UserController {
   constructor(private readonly userService: UserService) { }
-  @Get()
-  findAll(@Query() query: string) {
-    return query
+  @Post()
+  findAll(@Body('title') title: string) {
+    return title
   }
 }
