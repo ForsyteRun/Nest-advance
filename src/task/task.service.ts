@@ -6,6 +6,8 @@ type Tack = {
   id: number;
   name: string;
   isCompleted: boolean;
+  priority?: number
+  tags?: string[]
 }
 
 @Injectable()
@@ -63,6 +65,8 @@ export class TaskService {
 
     task.name = dto.name
     task.isCompleted = dto.isCompleted
+    task.priority = dto.priority
+    task.tags = dto.tags
 
     return {
       message: 'Task updated successfully'
