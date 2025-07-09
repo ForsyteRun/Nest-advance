@@ -6,9 +6,9 @@ type Tack = {
   id: number;
   name: string;
   isCompleted: boolean;
-  priority?: number
-  tags?: string[]
-}
+  priority?: number;
+  tags?: string[];
+};
 
 @Injectable()
 export class TaskService {
@@ -25,71 +25,71 @@ export class TaskService {
     },
   ];
   findAll() {
-    return this.tasks
+    return this.tasks;
   }
 
   findById(id: number) {
-    const task = this.tasks.find(task => task.id === id)
+    const task = this.tasks.find((task) => task.id === id);
 
     if (!task) {
-      throw new NotFoundException('Task not found')
+      throw new NotFoundException('Task not found');
     }
 
-    return task
+    return task;
   }
 
   createTask(dto: CreateTaskDto) {
-    const isTaskExist = this.tasks.find(task => task.name === dto.name)
+    const isTaskExist = this.tasks.find((task) => task.name === dto.name);
 
     if (isTaskExist) {
       return {
-        message: 'Task already exist'
-      }
+        message: 'Task already exist11111',
+      };
     }
 
     const newTask = {
       id: this.tasks.length + 1,
       isCompleted: false,
-      name: dto.name
-    }
+      name: dto.name,
+    };
 
-    this.tasks.push(newTask)
+    this.tasks.push(newTask);
 
     return {
-      message: 'Task created successfully'
-    }
+      message: 'Task created successfully',
+    };
   }
 
   updateTask(id: number, dto: UpdateTaskDto) {
-    const task = this.findById(id)
+    const task = this.findById(id);
 
-    task.name = dto.name
-    task.isCompleted = dto.isCompleted
-    task.priority = dto.priority
-    task.tags = dto.tags
+    task.name = dto.name;
+    task.isCompleted = dto.isCompleted;
+    task.priority = dto.priority;
+    task.tags = dto.tags;
 
     return {
-      message: 'Task updated successfully'
-    }
+      message: 'Task updated successfully',
+    };
   }
 
   patchTask(id: number, dto: Partial<UpdateTaskDto>) {
-    let task = this.findById(id)
+    let task = this.findById(id);
 
-    Object.assign(task, dto)
+    Object.assign(task, dto);
 
     return {
-      message: 'Task updated successfully'
-    }
+      message: 'Task updated successfully',
+    };
   }
 
   deleteTask(id: number) {
-    const task = this.findById(id)
+    const task = this.findById(id);
 
-    this.tasks = this.tasks.filter(t => t.id !== task.id)
+    this.tasks = this.tasks.filter((t) => t.id !== task.id);
 
     return {
-      message: 'Task deleted successfully'
-    }
+      message: 'Task deleted successfully',
+    };
   }
 }

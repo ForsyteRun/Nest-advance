@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller({
@@ -10,5 +10,10 @@ export class UserController {
   @Post()
   findAll(@Body('title') title: string) {
     return title
+  }
+
+  @Get('headers')
+  getHeaders(@Headers('x-auth') headers: any) {
+    return headers
   }
 }
