@@ -13,8 +13,8 @@ services:
       - postgres
 
   pgadmin:
-    container_name: pgadmin_container
     image: dpage/pgadmin4:6.19
+    container_name: pgadmin_container
     depends_on:
       - postgres
     environment:
