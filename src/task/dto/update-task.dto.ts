@@ -1,34 +1,23 @@
-import { IsArray, IsBoolean, IsEnum, IsInt, IsNotEmpty, IsPositive, IsString, IsUrl, Length, Matches, MinLength } from "class-validator";
-
-export enum TagEnum {
-  work = 'work',
-  home = 'home',
-  study = 'study'
-}
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 
 export class UpdateTaskDto {
-  @IsString({ message: 'Name must be a string' })
+  @IsString()
   @IsNotEmpty()
   @Length(3, 10)
-  name: string;
+  title: string;
 
-  @IsBoolean()
-  isCompleted: boolean
-
+  @IsInt()
   @IsNotEmpty()
-  @IsInt({ message: 'Priority must be a number' })
-  @IsPositive()
-  priority: number
+  note: number;
 
-  @IsArray()
-  @IsEnum(TagEnum, { each: true })
-  tags: string[]
-
-  @MinLength(3)
-  @IsString({ message: 'Name must be a string' })
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
-  password: string
-
-  @IsUrl({ protocols: ['https'] })
-  url: string
+  @IsOptional()
+  @IsBoolean()
+  isPublic?: boolean;
 }

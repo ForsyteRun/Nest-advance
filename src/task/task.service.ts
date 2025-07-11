@@ -1,95 +1,69 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  NotAcceptableException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TaskEntity } from './entities/task.entity';
+import { Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { async } from 'rxjs';
 import { UpdateTaskDto } from './dto/update-task.dto';
-
-type Tack = {
-  id: number;
-  name: string;
-  isCompleted: boolean;
-  priority?: number;
-  tags?: string[];
-};
 
 @Injectable()
 export class TaskService {
-  private tasks: Tack[] = [
-    {
-      id: 1,
-      name: 'task 1',
-      isCompleted: false,
-    },
-    {
-      id: 2,
-      name: 'task 2',
-      isCompleted: false,
-    },
-  ];
-  findAll() {
-    return this.tasks;
+  constructor(
+    @InjectRepository(TaskEntity)
+    private readonly taskRepository: Repository<TaskEntity>,
+  ) {}
+
+  async findAll(): Promise<TaskEntity[]> {
+    return this.taskRepository.find({
+      order: { createdAt: 'DESC' },
+      where: { isPublic: false },
+    });
   }
 
-  findById(id: number) {
-    const task = this.tasks.find((task) => task.id === id);
+  async findById(id: string): Promise<TaskEntity | null> {
+    const task = await this.taskRepository.findOneBy({ id: Number(id) });
 
     if (!task) {
-      throw new NotFoundException('Task not found');
+      throw new NotAcceptableException('Задачи не существует');
     }
 
     return task;
   }
 
-  createTask(dto: CreateTaskDto) {
-    const isTaskExist = this.tasks.find((task) => task.name === dto.name);
+  async create(data: CreateTaskDto): Promise<TaskEntity> {
+    const createdTask = this.taskRepository.create(data);
+    const savedTask = this.taskRepository.save(createdTask);
 
-    if (isTaskExist) {
-      return {
-        message: 'Task already exist11111',
-      };
+    return savedTask;
+  }
+
+  async updateFullTask(id: string, dto: UpdateTaskDto): Promise<boolean> {
+    const task = await this.findById(id);
+
+    if (!task) {
+      throw new NotAcceptableException('Задачи не существует');
     }
-
-    const newTask = {
-      id: this.tasks.length + 1,
-      isCompleted: false,
-      name: dto.name,
-    };
-
-    this.tasks.push(newTask);
-
-    return {
-      message: 'Task created successfully',
-    };
-  }
-
-  updateTask(id: number, dto: UpdateTaskDto) {
-    const task = this.findById(id);
-
-    task.name = dto.name;
-    task.isCompleted = dto.isCompleted;
-    task.priority = dto.priority;
-    task.tags = dto.tags;
-
-    return {
-      message: 'Task updated successfully',
-    };
-  }
-
-  patchTask(id: number, dto: Partial<UpdateTaskDto>) {
-    let task = this.findById(id);
 
     Object.assign(task, dto);
 
-    return {
-      message: 'Task updated successfully',
-    };
+    await this.taskRepository.save(task);
+
+    return true;
   }
 
-  deleteTask(id: number) {
-    const task = this.findById(id);
+  async delete(id: string): Promise<boolean> {
+    const task = await this.findById(id);
 
-    this.tasks = this.tasks.filter((t) => t.id !== task.id);
+    if (!task) {
+      throw new NotAcceptableException('Задачи не существует');
+    }
 
-    return {
-      message: 'Task deleted successfully',
-    };
+    await this.taskRepository.remove(task);
+
+    return true;
   }
 }
