@@ -2,22 +2,24 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  PrimaryGeneratedColumn,
+  Generated,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'tasks' })
 export class TaskEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
+  @Generated('uuid')
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   title: string;
 
-  @Column()
+  @Column({ type: 'int', name: 'user_note' })
   note: number;
 
-  @Column({ default: false })
+  @Column({ default: false, nullable: true })
   isPublic: boolean;
 
   @CreateDateColumn()

@@ -20,7 +20,6 @@ export class TaskService {
   async findAll(): Promise<TaskEntity[]> {
     return this.taskRepository.find({
       order: { createdAt: 'DESC' },
-      where: { isPublic: false },
     });
   }
 
