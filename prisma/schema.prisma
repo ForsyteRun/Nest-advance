@@ -7,18 +7,6 @@ datasource db {
   url      = env("POSTGRES_URI")
 }
 
-model User {
-  id String @id @default(uuid())
-
-  name String
-
-  cretedAt DateTime @default(now()) @map("creted_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-
-  @@map("user")
-}
-
 model Task {
   id String @id @default(uuid())
 
@@ -31,6 +19,9 @@ model Task {
 
   reviews Review[] @relation("task_reviews")
   executor Executor[] @relation("task_executors")
+
+  poster Poster @relation(fields: [posterId], references: [id])
+  posterId String @unique
 
   cretedAt DateTime @default(now()) @map("creted_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -63,6 +54,17 @@ model Executor {
 
   @@map("executor")
 
+}
+
+model Poster {
+  id String @id @default(uuid())
+
+  task Task? @relation()
+
+  cretedAt DateTime @default(now()) @map("creted_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("poster")
 }
 
 enum Genre {
