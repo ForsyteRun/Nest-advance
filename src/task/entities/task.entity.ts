@@ -1,9 +1,13 @@
+import { ExecutorEntity } from 'src/executor/entities/executor.entity';
 import { ReviewEntity } from 'src/review/entities/review.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   Generated,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryColumn,
   PrimaryGeneratedColumn,
@@ -26,6 +30,14 @@ export class TaskEntity {
 
   @OneToMany(() => ReviewEntity, (review) => review.task)
   reviews: ReviewEntity[];
+
+  @ManyToMany(() => ExecutorEntity, (executor) => executor.tasks)
+  @JoinTable({
+    name: 'task_executors',
+    joinColumn: { name: 'executor_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'task_id', referencedColumnName: 'id' },
+  })
+  executors: ExecutorEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

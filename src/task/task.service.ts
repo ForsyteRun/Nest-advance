@@ -20,11 +20,21 @@ export class TaskService {
   async findAll(): Promise<TaskEntity[]> {
     return this.taskRepository.find({
       order: { createdAt: 'DESC' },
+      relations: {
+        reviews: true,
+        executors: true,
+      },
     });
   }
 
   async findById(id: string): Promise<TaskEntity | null> {
-    const task = await this.taskRepository.findOneBy({ id: Number(id) });
+    const task = await this.taskRepository.findOne({
+      where: { id: Number(id) },
+      relations: {
+        reviews: true,
+        executors: true,
+      },
+    });
 
     if (!task) {
       throw new NotAcceptableException('Задачи не существует');

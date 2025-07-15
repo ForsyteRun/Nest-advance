@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getTypeormConfig } from './config/typeorm.config';
 import { ReviewModule } from './review/review.module';
+import { ExecutorModule } from './executor/executor.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ReviewModule } from './review/review.module';
     TaskModule,
     UserModule,
     ReviewModule,
+    ExecutorModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsInt,
@@ -5,7 +6,10 @@ import {
   IsString,
   IsOptional,
   Length,
+  IsArray,
+  ValidateNested,
 } from 'class-validator';
+import { ExecutorEntity } from 'src/executor/entities/executor.entity';
 
 export class CreateTaskDto {
   @IsString()
@@ -16,6 +20,12 @@ export class CreateTaskDto {
   @IsInt()
   @IsNotEmpty()
   note: number;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ExecutorEntity)
+  executors: ExecutorEntity[];
 
   @IsOptional()
   @IsBoolean()
