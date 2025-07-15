@@ -1,22 +1,15 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ExecutorModule } from './executor/executor.module';
+import { ReviewModule } from './review/review.module';
 import { TaskModule } from './task/task.module';
 import { UserModule } from './user/user.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { getTypeormConfig } from './config/typeorm.config';
-import { ReviewModule } from './review/review.module';
-import { ExecutorModule } from './executor/executor.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: getTypeormConfig,
-      inject: [ConfigService],
-    }),
     TaskModule,
     UserModule,
     ReviewModule,
