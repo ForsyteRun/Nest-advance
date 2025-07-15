@@ -44,3 +44,7 @@ coverage/
 # Other
 *.bak
 *.swp
+
+/generated/prisma
+
+/generated/prisma
