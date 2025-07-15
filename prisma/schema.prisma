@@ -11,4 +11,50 @@ model User {
   id String @id @default(uuid())
 
   name String
+
+  cretedAt DateTime @default(now()) @map("creted_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+
+  @@map("user")
+}
+
+model Task {
+  id String @id @default(uuid())
+
+  title String
+  description String?
+  note Int
+  rating Float @default(0.0)
+  isAvailable Boolean @default(false) @map("is_available")
+  genre Genre @default(FAST)
+
+  reviews Review[] @relation("Task_Reviews")
+
+  cretedAt DateTime @default(now()) @map("creted_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("task")
+}
+
+model Review {
+  id String @id @default(uuid())
+
+  text String 
+
+  task Task @relation("Task_Reviews", fields: [taskId], references: [id], onDelete: Cascade)
+  taskId String @map("task_id")
+  
+  cretedAt DateTime @default(now()) @map("creted_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("reviews")
+}
+
+enum Genre {
+  FAST
+  SLOW
+  MIDDLE
+
+  @@map("enum_genre")
 }

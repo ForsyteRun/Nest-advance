@@ -7,5 +7,5 @@ export class CreateReviewDto {
 
   @IsString()
   @IsNotEmpty()
-  review: string;
+  text: string;
 }
