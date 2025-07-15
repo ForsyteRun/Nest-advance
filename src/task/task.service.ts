@@ -9,12 +9,15 @@ import { Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { async } from 'rxjs';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { ExecutorEntity } from 'src/executor/entities/executor.entity';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectRepository(TaskEntity)
     private readonly taskRepository: Repository<TaskEntity>,
+    @InjectRepository(ExecutorEntity)
+    private readonly executorRepository: Repository<ExecutorEntity>,
   ) {}
 
   async findAll(): Promise<TaskEntity[]> {
@@ -43,8 +46,26 @@ export class TaskService {
     return task;
   }
 
-  async create(data: CreateTaskDto): Promise<TaskEntity> {
-    const createdTask = this.taskRepository.create(data);
+  async create(dto: CreateTaskDto): Promise<TaskEntity> {
+    const { title, note, executors } = dto;
+
+    const executorEntities: ExecutorEntity[] = [];
+
+    if (executors && executors.length) {
+      for (const ex of executors) {
+        const createdExecutor = this.executorRepository.create(ex);
+        const savedExecutor =
+          await this.executorRepository.save(createdExecutor);
+        executorEntities.push(savedExecutor);
+      }
+    }
+
+    const createdTask = this.taskRepository.create({
+      title,
+      note,
+      executors: executorEntities,
+    });
+
     const savedTask = this.taskRepository.save(createdTask);
 
     return savedTask;

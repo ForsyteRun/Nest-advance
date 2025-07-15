@@ -4,12 +4,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Generated,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
