@@ -29,7 +29,8 @@ model Task {
   isAvailable Boolean @default(false) @map("is_available")
   genre Genre @default(FAST)
 
-  reviews Review[] @relation("Task_Reviews")
+  reviews Review[] @relation("task_reviews")
+  executor Executor[] @relation("task_executors")
 
   cretedAt DateTime @default(now()) @map("creted_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -41,14 +42,27 @@ model Review {
   id String @id @default(uuid())
 
   text String 
-
-  task Task @relation("Task_Reviews", fields: [taskId], references: [id], onDelete: Cascade)
+  task Task @relation("task_reviews", fields: [taskId], references: [id], onDelete: Cascade)
   taskId String @map("task_id")
   
   cretedAt DateTime @default(now()) @map("creted_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("reviews")
+}
+
+model Executor {
+  id String @id @default(uuid())
+
+  name  String 
+
+  tasks Task[]  @relation("task_executors")
+
+  cretedAt DateTime @default(now()) @map("creted_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("executor")
+
 }
 
 enum Genre {
