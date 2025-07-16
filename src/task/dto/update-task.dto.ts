@@ -16,8 +16,4 @@ export class UpdateTaskDto {
   @IsInt()
   @IsNotEmpty()
   note: number;
-
-  @IsOptional()
-  @IsBoolean()
-  isPublic?: boolean;
 }

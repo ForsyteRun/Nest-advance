@@ -9,7 +9,7 @@ import {
   IsArray,
   ValidateNested,
 } from 'class-validator';
-import { ExecutorEntity } from 'src/executor/entities/executor.entity';
+import { CreateExecutorDto } from 'src/executor/dto/create-executor.dto';
 
 export class CreateTaskDto {
   @IsString()
@@ -21,13 +21,16 @@ export class CreateTaskDto {
   @IsNotEmpty()
   note: number;
 
-  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ExecutorEntity)
-  executors: ExecutorEntity[];
+  @Type(() => CreateExecutorDto)
+  executors: CreateExecutorDto[];
 
   @IsOptional()
   @IsBoolean()
   isPublic?: boolean;
+
+  @IsOptional()
+  @IsString()
+  poster: string;
 }

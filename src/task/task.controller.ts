@@ -31,16 +31,16 @@ export class TaskController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createTask(@Body() data: CreateTaskDto) {
-    return this.taskService.create(data);
+    return await this.taskService.create(data);
   }
 
   @Put(':id')
   async updateTask(@Param('id') id: string, @Body() dto: UpdateTaskDto) {
-    return this.taskService.updateFullTask(id, dto);
+    return await this.taskService.updateFullTask(id, dto);
   }
 
   @Delete(':id')
   async deleteTask(@Param('id') id: string) {
-    return this.taskService.delete(id);
+    return await this.taskService.delete(id);
   }
 }
