@@ -1,6 +1,14 @@
-import { Controller, Get, Post, Body, UsePipes } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UsePipes,
+  UseGuards,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { StringToLowercasePipe } from './common/pipes/string-to-lowercase.pipe';
+import { AuthGuard } from './common/guards/auth.guard';
 
 @Controller()
 export class AppController {
@@ -9,6 +17,12 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('me')
+  getProfile(): string {
+    return 'profile';
   }
 
   @UsePipes(StringToLowercasePipe)
