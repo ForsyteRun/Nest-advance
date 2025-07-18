@@ -9,6 +9,7 @@ import {
 import { AppService } from './app.service';
 import { StringToLowercasePipe } from './common/pipes/string-to-lowercase.pipe';
 import { AuthGuard } from './common/guards/auth.guard';
+import { UserAgent } from './common/decorators/user-agent.decorator';
 
 @Controller()
 export class AppController {
@@ -21,8 +22,11 @@ export class AppController {
 
   @UseGuards(AuthGuard)
   @Get('me')
-  getProfile(): string {
-    return 'profile';
+  getProfile(@UserAgent() userAgent: string) {
+    return {
+      userAgent,
+      message: 'Protected route',
+    };
   }
 
   @UsePipes(StringToLowercasePipe)
