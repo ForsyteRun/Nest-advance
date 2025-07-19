@@ -12,6 +12,7 @@ import { StringToLowercasePipe } from './common/pipes/string-to-lowercase.pipe';
 import { AuthGuard } from './common/guards/auth.guard';
 import { UserAgent } from './common/decorators/user-agent.decorator';
 import { ResponseInterseptor } from './common/interseptors/response.interseptor';
+import { ApiHeader } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
@@ -22,6 +23,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @ApiHeader({ name: 'Authorization', description: 'Bearer token' })
   @UseGuards(AuthGuard)
   @Get('me')
   getProfile(@UserAgent() userAgent: string) {

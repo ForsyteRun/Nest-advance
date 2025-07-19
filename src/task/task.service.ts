@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
+import { CreateTaskRequestDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Task } from '@prisma/client';
@@ -28,7 +28,7 @@ export class TaskService {
     return task;
   }
 
-  async create(dto: CreateTaskDto): Promise<Task> {
+  async create(dto: CreateTaskRequestDto): Promise<Task> {
     const { executors, poster, ...rest } = dto;
 
     const task = await this.prismaService.task.create({
