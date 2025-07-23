@@ -1,7 +1,16 @@
-import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  HttpCode,
+  HttpStatus,
+  Res,
+  Req,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterRequest } from './dto/register.dto';
 import { LoginRequest } from './dto/login.dto';
+import type { Response, Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -9,13 +18,34 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() dto: RegisterRequest) {
-    return await this.authService.register(dto);
+  async register(
+    @Res({ passthrough: true }) res: Response,
+    @Body() dto: RegisterRequest,
+  ) {
+    return await this.authService.register(res, dto);
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginRequest) {
-    return await this.authService.login(dto);
+  async login(
+    @Res({ passthrough: true }) res: Response,
+    @Body() dto: LoginRequest,
+  ) {
+    return await this.authService.login(res, dto);
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return await this.authService.refresh(req, res);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@Res({ passthrough: true }) res: Response) {
+    return await this.authService.logout(res);
   }
 }
