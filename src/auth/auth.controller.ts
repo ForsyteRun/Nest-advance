@@ -6,6 +6,8 @@ import {
   HttpStatus,
   Res,
   Req,
+  Get,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterRequest } from './dto/register.dto';
@@ -20,6 +22,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthResponse } from './dto/auth.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -134,5 +137,15 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async logout(@Res({ passthrough: true }) res: Response) {
     return await this.authService.logout(res);
+  }
+
+  @ApiOperation({
+    summary: 'get user profile',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  async getProfile(@Req() req: Request) {
+    return req.user;
   }
 }

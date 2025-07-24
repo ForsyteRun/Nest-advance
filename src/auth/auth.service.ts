@@ -88,16 +88,7 @@ export class AuthService {
     const payload: JwtPayload = await this.jwtService.verifyAsync(refreshToken);
 
     if (payload) {
-      const user = await this.prismaServece.user.findUnique({
-        where: { id: payload.id },
-        select: {
-          id: true,
-        },
-      });
-
-      if (!user) {
-        return new NotFoundException('User not found');
-      }
+      const user = await this.validate(payload.id);
 
       return this.auth(res, user.id);
     }
@@ -135,5 +126,17 @@ export class AuthService {
     this.setCookie(res, refreshToken, new Date(Date.now() + 60 * 60 * 24 * 7));
 
     return { accessToken };
+  }
+
+  async validate(id: string) {
+    const user = await this.prismaServece.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 }
