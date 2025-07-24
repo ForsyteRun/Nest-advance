@@ -1,18 +1,13 @@
 import {
   Body,
   Controller,
-  Post,
+  Get,
   HttpCode,
   HttpStatus,
-  Res,
+  Post,
   Req,
-  Get,
-  UseGuards,
+  Res,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { RegisterRequest } from './dto/register.dto';
-import { LoginRequest } from './dto/login.dto';
-import type { Response, Request } from 'express';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -21,8 +16,14 @@ import {
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { User } from '@prisma/client';
+import type { Request, Response } from 'express';
+import { AuthService } from './auth.service';
+import { Authorization } from './decorators/auth.decorator';
+import { Authorized } from './decorators/autirized.decorator';
 import { AuthResponse } from './dto/auth.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { LoginRequest } from './dto/login.dto';
+import { RegisterRequest } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -142,10 +143,10 @@ export class AuthController {
   @ApiOperation({
     summary: 'get user profile',
   })
-  @UseGuards(AuthGuard('jwt'))
+  @Authorization()
   @Get('me')
   @HttpCode(HttpStatus.OK)
-  async getProfile(@Req() req: Request) {
-    return req.user;
+  async getProfile(@Authorized() user: User) {
+    return user;
   }
 }
